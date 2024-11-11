@@ -1,0 +1,114 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: wheat; 
+    color: #556B2F; /* dark green olive */
+    margin: 0;
+    padding: 20px;
+}
+
+/* Titres */
+h1, h2 {
+    color: #556B2F; /* dark green olive */
+    text-align: center;
+    border-bottom: 2px solid #556B2F;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+/* Formulaire */
+form {
+    background-color: #556B2F; /* dark green olive */
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    margin: 0 auto 30px;
+}
+
+form input[type="text"],
+form select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+form input[type="text"]::placeholder {
+    color: wheat;
+}
+
+form select {
+    background-color: wheat;
+    color: #556B2F;
+}
+
+form button[type="submit"] {
+    background-color: wheat;
+    color: #556B2F;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button[type="submit"]:hover {
+    background-color: #F5DEB3; 
+}
+
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    background-color: wheat;
+    color: #556B2F;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+}
+
+ul li strong {
+    font-weight: bold;
+}
+
+ul li img {
+    margin-left: 15px;
+    border-radius: 8px;
+}
+
+
+ul li a {
+    color: #556B2F;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+ul li a:hover {
+    color: #8B4513; 
+}
+
+/* Formulaire de filtrage */
+form select {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 8px;
+    background-color: #556B2F;
+    color: wheat;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+form select option {
+    color: #556B2F;
+    background-color: wheat;
+}
