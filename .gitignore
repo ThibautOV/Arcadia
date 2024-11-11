@@ -1,0 +1,9 @@
+# Ignorer les fichiers de configuration sensibles
+
+config/database.php
+config/NoSql.php
+config/config.php
+
+# Ignorer le dossier vendor (bibliothèques tierces)
+
+vendor/
