@@ -21,11 +21,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Authentifier l'utilisateur
     if ($userModel->authenticate($email, $password)) {
-        $_SESSION['user_role'] = $userModel->getUserRole($email); // Récupérer le rôle de l'utilisateur
-        $_SESSION['user_email'] = $email; // Enregistrer l'email dans la session
+        // Récupérer le rôle de l'utilisateur
+        $role = $userModel->getUserRole($email);
 
-        // Rediriger vers le tableau de bord ou la page d'accueil de l'administrateur
-        header("Location: ../admin/dashboard.php");
+        // Enregistrer les informations dans la session
+        $_SESSION['user_role'] = $role;
+        $_SESSION['user_email'] = $email;
+
+        // Redirection en fonction du rôle
+        if ($role == 'admin') {
+            // Si l'utilisateur est un administrateur, rediriger vers le tableau de bord
+            header("Location: ../admin/dashboard.php");
+        } elseif ($role == 'employe') {
+            // Si l'utilisateur est un employé, rediriger vers la gestion des avis
+            header("Location: index.php?action=manageReviews"); // Redirection vers index.php avec l'action manageReviews
+        } elseif ($role == 'veterinaire') {
+            // Si l'utilisateur est un vétérinaire, rediriger vers la page d'accueil du vétérinaire
+            header("Location: ../veterinaire/home.php");
+        } else {
+            // Si le rôle est inconnu, rediriger vers la page de connexion avec un message d'erreur
+            $message = "Rôle inconnu. Veuillez contacter un administrateur.";
+        }
         exit();
     } else {
         $message = "Identifiants invalides. Veuillez réessayer.";

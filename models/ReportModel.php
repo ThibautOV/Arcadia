@@ -1,39 +1,47 @@
 <?php
 class ReportModel {
-    private $db;
+    private $conn;
 
     public function __construct($db) {
-        $this->db = $db;
+        $this->conn = $db;
     }
 
-    public function getAllReports() {
-        $query = "SELECT * FROM reports";
-        $statement = $this->db->prepare($query);
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    // Ajouter un rapport vétérinaire
+    public function createReport($animalName, $reportDate, $reportText, $vetId) {
+        $query = "INSERT INTO vet_reports (animal_name, report_date, report_text, vet_id) 
+                  VALUES (:animal_name, :report_date, :report_text, :vet_id)";
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':animal_name', $animalName);
+        $stmt->bindParam(':report_date', $reportDate);
+        $stmt->bindParam(':report_text', $reportText);
+        $stmt->bindParam(':vet_id', $vetId);
+
+        return $stmt->execute();
     }
 
-    // Ajoutez cette méthode pour récupérer les rapports avec des filtres
-    public function getReports($animalId = null, $date = null) {
-        $query = "SELECT * FROM reports WHERE 1=1"; // Commencer la requête
-        if ($animalId) {
-            $query .= " AND animal_id = :animal_id"; // Ajouter filtre animal
+    // Récupérer les rapports vétérinaires
+    public function getReports($filters = []) {
+        $query = "SELECT * FROM vet_reports WHERE 1=1";
+
+        if (!empty($filters['animal_name'])) {
+            $query .= " AND animal_name = :animal_name";
         }
-        if ($date) {
-            $query .= " AND date = :date"; // Ajouter filtre date
-        }
-        $statement = $this->db->prepare($query);
-        
-        // Lier les valeurs si elles existent
-        if ($animalId) {
-            $statement->bindValue(':animal_id', $animalId);
-        }
-        if ($date) {
-            $statement->bindValue(':date', $date);
+        if (!empty($filters['report_date'])) {
+            $query .= " AND report_date = :report_date";
         }
 
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $this->conn->prepare($query);
+
+        if (!empty($filters['animal_name'])) {
+            $stmt->bindParam(':animal_name', $filters['animal_name']);
+        }
+        if (!empty($filters['report_date'])) {
+            $stmt->bindParam(':report_date', $filters['report_date']);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 ?>

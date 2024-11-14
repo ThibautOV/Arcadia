@@ -1,0 +1,172 @@
+:root {
+    --dark-green-olive: #556B2F; /* Dark Green Olive */
+    --wheat: #F5DEB3;           /* Wheat */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--wheat);
+    color: var(--dark-green-olive);
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    text-align: center;
+    color: var(--dark-green-olive);
+    font-size: 2rem;
+    margin-top: 20px;
+}
+
+h3 {
+    color: var(--dark-green-olive);
+    font-size: 1.5rem;
+    margin-top: 30px;
+    text-align: center;
+}
+
+p {
+    text-align: center;
+    color: red;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+ul li {
+    background-color: var(--dark-green-olive);
+    color: white;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ul li form {
+    display: inline;
+}
+
+ul li form input[type="submit"] {
+    background-color: #FF6347; /* Tomato */
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+ul li form input[type="submit"]:hover {
+    background-color: #D9534F;
+}
+
+form {
+    margin: 20px auto;
+    max-width: 600px;
+    background-color: var(--dark-green-olive);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+}
+
+form label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+form input[type="text"],
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    color: var(--dark-green-olive);
+}
+
+form input[type="submit"] {
+    background-color: #556B2F;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+form input[type="submit"]:hover {
+    background-color: #3e5425;
+}
+
+@media (max-width: 768px) {
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    form {
+        padding: 15px;
+    }
+
+    form label {
+        font-size: 0.9rem;
+    }
+
+    form input[type="text"],
+    form textarea {
+        font-size: 0.9rem;
+    }
+
+    ul li {
+        font-size: 1rem;
+    }
+
+    ul li form input[type="submit"] {
+        font-size: 0.9rem;
+        padding: 5px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    h3 {
+        font-size: 1rem;
+    }
+
+    form {
+        padding: 10px;
+    }
+
+    form label {
+        font-size: 0.85rem;
+    }
+
+    form input[type="text"],
+    form textarea {
+        font-size: 0.85rem;
+    }
+
+    ul li {
+        font-size: 0.9rem;
+    }
+
+    ul li form input[type="submit"] {
+        font-size: 0.85rem;
+        padding: 4px 7px;
+    }
+}

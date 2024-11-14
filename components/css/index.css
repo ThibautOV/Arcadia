@@ -1,0 +1,169 @@
+body {
+    background-color: #f5deb3; /* Fond #f5deb3 */
+    color: #556b2f; /* Texte #556b2f */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Container principal de la page d'accueil */
+  .home-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* En-tête de la page */
+  .home-page h1 {
+    font-size: 3rem;
+    text-align: center;
+    color: #556b2f;
+    margin-bottom: 20px;
+  }
+  
+  .home-page p {
+    font-size: 1.2rem;
+    text-align: center;
+    color: #556b2f;
+    margin-bottom: 40px;
+  }
+  
+  /* Introduction */
+  .introduction {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .introduction img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  /* Section des Habitats */
+  h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    color: #556b2f;
+    margin-top: 40px;
+  }
+  
+  .habitats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .habitat-card {
+    background-color: white;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .habitat-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .habitat-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .habitat-card h3 {
+    font-size: 1.8rem;
+    color: #556b2f;
+  }
+  
+  /* Section des Services */
+  .services {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  
+  .service-card {
+    background-color: white;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .service-card h3 {
+    font-size: 1.8rem;
+    color: #556b2f;
+  }
+  
+  .service-card p {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  /* Section des Avis */
+  .reviews {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  
+  .review-card {
+    background-color: white;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .review-card h4 {
+    font-size: 1.6rem;
+    color: #556b2f;
+  }
+  
+  .review-card p {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  /* Mise en page responsive */
+  @media (max-width: 768px) {
+    .home-page h1 {
+      font-size: 2.5rem;
+    }
+  
+    .home-page p {
+      font-size: 1rem;
+    }
+  
+    .habitat-card,
+    .service-card,
+    .review-card {
+      width: 100%;
+      margin: 10px 0;
+    }
+  
+    .intro-image {
+      max-width: 80%;
+    }
+  }
+  
+  @media (min-width: 769px) {
+    .habitat-card,
+    .service-card,
+    .review-card {
+      width: 300px;
+    }
+  }

@@ -1,70 +1,50 @@
 <?php
 // index.php
-require_once 'config.php';
+
+// Inclure le fichier config.php en corrigeant le chemin d'accès
+require_once '../../config/config.php';  // Remonter deux niveaux pour accéder à config/config.php
 
 // Récupérer l'action de la requête, ou par défaut 'home'
 $action = $_GET['action'] ?? 'home';
 
 // Créer une connexion à la base de données
-$dbConnection = getDatabaseConnection();
+$dbConnection = getDatabaseConnection();  // Appel à la fonction définie dans config.php
 
+// Traitement des actions demandées
 switch ($action) {
     case 'home':
         require 'Controllers/HomeController.php';
         $controller = new HomeController();
         $controller->index();
         break;
-    
-    case 'listServices':
-        require 'Controllers/ServiceController.php';
-        $controller = new ServiceController();
-        $controller->listServices();
-        break;
 
-    case 'listHabitats':
-        require 'models/HabitatModel.php';
-        require 'Controllers/HabitatController.php';
+    case 'registerUser':
+        // Formulaire d'enregistrement d'utilisateur (employé/vétérinaire)
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $role = $_POST['role'];  // Exemple : 'employe' ou 'veterinaire'
 
-        // Instancier le modèle Habitat avec la connexion à la base de données
-        $habitatModel = new HabitatModel($dbConnection);
-        $habitatController = new HabitatController($dbConnection);
+            // Vérification des données
+            if (empty($username) || empty($password) || empty($role)) {
+                echo json_encode(['status' => 'error', 'message' => 'Tous les champs sont requis.']);
+                exit;
+            }
 
-        // Récupérer la liste des habitats
-        $habitats = $habitatModel->getAllHabitats();
+            // Hachage du mot de passe avant de l'enregistrer
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        // Afficher les habitats
-        $habitatController->showHabitats();
-        break;
+            // Préparer la requête pour insérer un nouvel utilisateur
+            $stmt = $dbConnection->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
+            $stmt->execute([$username, $hashedPassword, $role]);
 
-    case 'listAnimals':
-        require 'models/AnimalModel.php';
-        require 'Controllers/AnimalController.php';
-
-        // Instancier le modèle Animal avec la connexion à la base de données
-        $animalModel = new AnimalModel($dbConnection);
-
-        // Créer une instance du contrôleur AnimalController
-        $animalController = new AnimalController($animalModel);
-
-        // Vérifier si un habitat est sélectionné
-        $selectedHabitat = $_GET['habitat'] ?? '';
-
-        // Récupérer les animaux en fonction de l'habitat sélectionné
-        if ($selectedHabitat) {
-            $animalsData = $animalController->getAnimalsByHabitat($selectedHabitat);
-        } else {
-            $animalsData = $animalController->getAllAnimals();
+            // Répondre en JSON après l'enregistrement
+            echo json_encode(['status' => 'success', 'message' => 'Utilisateur enregistré avec succès.']);
         }
-
-        $animals = $animalsData['animals'];
-        $habitats = $animalsData['habitats'];  // La liste des habitats disponibles
-
-        // Charger la vue des animaux
-        require 'views/animal/list.php';
         break;
 
     default:
-        echo "Page non trouvée.";
+        echo "Page non trouvée.";  // Cas par défaut si l'action n'est pas reconnue
         break;
 }
 ?>

@@ -1,14 +1,11 @@
 <?php
-// Controllers/AuthController.php
-
-require_once 'Models/User.php';
+require_once 'models/User.php';  // Inclure le modèle User
 
 class AuthController {
     private $model;
 
-    public function __construct() {
-        global $pdo;
-        $this->model = new User($pdo);
+    public function __construct($db) {
+        $this->model = new User($db);
     }
 
     public function login() {
@@ -29,7 +26,7 @@ class AuthController {
                 $error = "Identifiants invalides.";
             }
         }
-        require 'Views/auth/login.php';
+        require 'views/auth/login.php';
     }
 
     public function logout() {

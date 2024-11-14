@@ -1,0 +1,105 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4; /* Fond neutre */
+    margin: 0;
+    padding: 0;
+    color: #556b2f; /* Dark Green Olive pour tous les textes */
+}
+
+.container {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Title */
+h2 {
+    text-align: center;
+    color: #556b2f; /* Dark Green Olive */
+    font-size: 2em;
+    margin-bottom: 30px;
+}
+
+/* Form Styles */
+form {
+    background-color: #f5deb3; /* Wheat pour le fond du formulaire */
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+form label {
+    display: block;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #556b2f; /* Dark Green Olive pour les labels */
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="date"],
+form input[type="time"],
+form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #556b2f; /* Dark Green Olive pour les champs de saisie */
+}
+
+form input[type="submit"] {
+    background-color: #556b2f; /* Dark Green Olive pour le bouton */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+form input[type="submit"]:hover {
+    background-color: #3b6b3b; /* Un vert plus foncé pour le survol */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    h2 {
+        font-size: 1.8em;
+    }
+
+    form {
+        padding: 15px;
+    }
+
+    form label {
+        font-size: 1em;
+    }
+
+    form input[type="text"],
+    form input[type="number"],
+    form input[type="date"],
+    form input[type="time"],
+    form select {
+        font-size: 1em;
+    }
+
+    form input[type="submit"] {
+        font-size: 1.2em;
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 1.5em;
+    }
+
+    form input[type="submit"] {
+        padding: 8px 15px;
+        font-size: 1em;
+    }
+}

@@ -1,0 +1,199 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; /* Couleur de fond neutre */
+    color: #556b2f; /* Dark Green Olive pour tout le texte */
+}
+
+.container {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    background-color: #f5deb3; /* Wheat pour le fond du header */
+    color: #556b2f; /* Dark Green Olive pour le texte */
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2em;
+    color: #556b2f; /* Dark Green Olive pour le titre */
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #2f4f4f; /* Dark Green Olive pour les liens */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    color: #3b6b3b; /* Un vert plus foncé pour le survol */
+}
+
+/* Section */
+section {
+    margin-top: 30px;
+}
+
+/* Reviews Section */
+.reviews-section h3 {
+    color: #556b2f; /* Dark Green Olive pour les titres */
+    font-size: 1.5em;
+}
+
+.reviews-section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.reviews-section th, .reviews-section td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.reviews-section th {
+    background-color: #556b2f; /* Dark Green Olive pour l'en-tête */
+    color: white;
+}
+
+.reviews-section td {
+    background-color: #fafad2; /* Wheat pour les lignes de données */
+}
+
+.reviews-section button {
+    background-color: #556b2f; /* Dark Green Olive pour les boutons */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.reviews-section button:hover {
+    background-color: #3b6b3b; /* Un vert plus foncé pour le survol */
+}
+
+/* Food Record Section */
+.food-record-section h3 {
+    color: #556b2f; /* Dark Green Olive pour le titre */
+    font-size: 1.5em;
+}
+
+.food-record-section form {
+    background-color: #f5deb3; /* Wheat pour le fond du formulaire */
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.food-record-section label {
+    display: block;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #556b2f; /* Dark Green Olive pour les labels */
+}
+
+.food-record-section input[type="text"],
+.food-record-section input[type="number"],
+.food-record-section input[type="date"],
+.food-record-section input[type="time"],
+.food-record-section select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #556b2f; /* Dark Green Olive pour les champs de saisie */
+}
+
+.food-record-section button {
+    background-color:#556b2f; /* Dark Green Olive pour le bouton */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.food-record-section button:hover {
+    background-color: #3b6b3b; /* Un vert plus foncé pour le survol */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.8em;
+    }
+
+    nav ul {
+        text-align: center;
+    }
+
+    nav ul li {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .container {
+        width: 95%;
+    }
+
+    .reviews-section table,
+    .food-record-section form {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .food-record-section label,
+    .food-record-section input[type="text"],
+    .food-record-section input[type="number"],
+    .food-record-section input[type="date"],
+    .food-record-section input[type="time"],
+    .food-record-section select {
+        font-size: 1em;
+    }
+
+    .reviews-section table th, .reviews-section table td {
+        padding: 8px;
+    }
+
+    .food-record-section button {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.6em;
+    }
+
+    .reviews-section table th,
+    .reviews-section table td {
+        font-size: 0.9em;
+        padding: 6px;
+    }
+
+    .food-record-section button {
+        padding: 8px 15px;
+    }
+}

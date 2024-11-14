@@ -1,129 +1,131 @@
 <?php
-require_once __DIR__ . '/../models/HabitatModel.php';
-require_once __DIR__ . '/../models/AnimalModel.php';
 
-class HabitatController
-{
+// Inclure le modèle HabitatModel et AnimalModel
+require_once __DIR__ . '/../models/HabitatModel.php';  // Assurez-vous que le chemin vers HabitatModel.php est correct
+require_once __DIR__ . '/../models/AnimalModel.php';   // Inclure AnimalModel
+
+class HabitatController {
     private $habitatModel;
     private $animalModel;
 
-    public function __construct($db)
-    {
-        $this->habitatModel = new HabitatModel($db);
-        $this->animalModel = new AnimalModel($db);
+    public function __construct($db) {
+        $this->habitatModel = new HabitatModel($db);  // Utilisation de HabitatModel
+        $this->animalModel = new AnimalModel($db);    // Utilisation de AnimalModel
     }
 
-    // Méthode pour gérer les requêtes d'action
-    public function handleRequest()
-    {
+    // Liste des habitats : cette méthode récupère tous les habitats et les passe à la vue
+    public function getHabitats() {
+        return $this->habitatModel->getAllHabitats();  // Utilisation de la méthode getAllHabitats() de HabitatModel
+    }
+
+    // Méthode pour afficher la liste des habitats dans la vue habitat/index.php
+    public function listHabitats() {
+        $habitats = $this->getHabitats(); // Récupère tous les habitats
+        include __DIR__ . '/../views/habitat/index.php'; // Affiche la vue
+    }
+
+    // Gérer les différentes actions (création, suppression d'habitat, etc.)
+    public function handleRequest() {
         $message = '';
 
+        // Vérifier si une requête POST a été envoyée
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $action = $_POST['action'] ?? '';
+            $action = $_POST['action'] ?? null;
 
             switch ($action) {
                 case 'create':
-                    $name = $_POST['name'] ?? '';
-                    $description = $_POST['description'] ?? '';
-                    $images = $_POST['images'] ?? '';
+                    // Créer un habitat
+                    $name = trim($_POST['name'] ?? '');
+                    $description = trim($_POST['description'] ?? '');
+                    $image_url = trim($_POST['image_url'] ?? '');
 
-                    if (!empty($name) && !empty($description) && !empty($images)) {
-                        $this->habitatModel->createHabitat($name, $description, $images);
-                        $message = "Habitat créé avec succès.";
+                    if (!empty($name) && !empty($description) && !empty($image_url)) {
+                        $this->habitatModel->createHabitat($name, $description, $image_url);
+                        header("Location: manage_habitats.php");
+                        exit();
                     } else {
                         $message = "Tous les champs sont requis pour créer un habitat.";
                     }
                     break;
 
                 case 'delete':
-                    $habitatId = $_POST['habitat_id'] ?? 0;
-                    if ($habitatId) {
-                        $this->habitatModel->deleteHabitat($habitatId);
-                        $message = "Habitat supprimé avec succès.";
+                    // Supprimer un habitat
+                    $habitat_id = (int) ($_POST['habitat_id'] ?? 0);
+                    if ($habitat_id > 0) {
+                        $this->habitatModel->deleteHabitat($habitat_id);
+                        header("Location: manage_habitats.php");
+                        exit();
                     } else {
-                        $message = "ID de l'habitat manquant pour la suppression.";
+                        $message = "Identifiant de l'habitat non valide pour la suppression.";
                     }
+                    break;
+
+                default:
+                    $message = "Action non définie.";
                     break;
             }
         }
-
         return $message;
     }
 
-    // Méthode pour récupérer les habitats
-    public function getHabitats()
-    {
-        return $this->habitatModel->getAllHabitats();
-    }
+    // Créer un habitat
+    public function createHabitat() {
+        $message = '';
 
-    // Méthode pour afficher la liste des habitats
-    public function listHabitats()
-    {
-        $this->showHabitats();
-    }
-
-    // Méthode pour afficher les détails des habitats
-    public function showHabitats()
-    {
-        $habitats = $this->habitatModel->getAllHabitats();
-        include 'views/habitat/index.php';
-    }
-
-    // Méthode pour récupérer les animaux en fonction de l'habitat avec une requête AJAX
-    public function getAnimalsByHabitatAjax()
-    {
-        // Vérifie si la requête est une requête AJAX en POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = json_decode(file_get_contents("php://input"), true);
-            $habitatName = $data['habitat'] ?? '';
+            $name = trim($_POST['name'] ?? '');
+            $description = trim($_POST['description'] ?? '');
+            $image_url = trim($_POST['image_url'] ?? '');
 
-            // Vérifie si le nom de l'habitat est spécifié
-            if (!empty($habitatName)) {
-                try {
-                    // Récupère les animaux pour l'habitat spécifié
-                    $animals = $this->animalModel->getAnimalsByHabitat($habitatName);
-
-                    // Envoie une réponse JSON avec les données des animaux et le statut de succès
-                    header('Content-Type: application/json');
-                    echo json_encode([
-                        'status' => 'success',
-                        'data' => $animals,
-                        'message' => count($animals) ? '' : 'Aucun animal trouvé pour cet habitat.'
-                    ]);
-                    exit;
-                } catch (Exception $e) {
-                    // En cas d'erreur, renvoie un message d'erreur
-                    header('Content-Type: application/json');
-                    echo json_encode([
-                        'status' => 'error',
-                        'message' => 'Erreur lors de la récupération des animaux : ' . $e->getMessage()
-                    ]);
-                    exit;
-                }
+            if (!empty($name) && !empty($description) && !empty($image_url)) {
+                $this->habitatModel->createHabitat($name, $description, $image_url);
+                header("Location: /habitat");
+                exit();
             } else {
-                // Envoie une réponse JSON avec un message d'erreur si le nom de l'habitat est manquant
-                header('Content-Type: application/json');
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'Nom de l\'habitat non spécifié.'
-                ]);
-                exit;
+                $message = "Tous les champs sont requis pour créer un habitat.";
             }
         }
-
-        // Envoie une réponse JSON avec un message d'erreur si la requête est invalide (pas en POST)
-        header('Content-Type: application/json');
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Requête invalide.'
-        ]);
-        exit;
+        include __DIR__ . '/../views/habitat/create.php';  // Vue pour créer un habitat
     }
 
-    // Méthode pour afficher la page des animaux avec le formulaire de filtrage
-    public function showAnimalsPage()
-    {
-        $habitats = $this->habitatModel->getAllHabitats();
-        include 'public/animal/list.php';
+    // Mettre à jour un habitat
+    public function updateHabitat($id) {
+        $message = '';
+        $habitat = $this->habitatModel->getHabitatById($id);  // Récupérer l'habitat existant
+
+        if (!$habitat) {
+            $message = "L'habitat spécifié est introuvable.";
+            include __DIR__ . '/../views/errors/404.php';
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = trim($_POST['name'] ?? '');
+            $description = trim($_POST['description'] ?? '');
+            $image_url = trim($_POST['image_url'] ?? '');
+
+            if (!empty($name) && !empty($description) && !empty($image_url)) {
+                $this->habitatModel->updateHabitat($id, $name, $description, $image_url);
+                header("Location: /habitat");
+                exit();
+            } else {
+                $message = "Tous les champs sont requis pour mettre à jour cet habitat.";
+            }
+        }
+        include __DIR__ . '/../views/habitat/update.php';  // Vue pour mettre à jour un habitat
+    }
+
+    // Supprimer un habitat
+    public function deleteHabitat($id) {
+        $this->habitatModel->deleteHabitat($id);  // Suppression de l'habitat
+        header("Location: /habitat");
+        exit();
+    }
+
+    // Méthode pour afficher la liste des habitats sur la page d'accueil
+    public function listHabitatsOnHomePage() {
+        $habitats = $this->getHabitats();
+        include __DIR__ . '/../views/home/index.php';  // Chemin de la vue de la page d'accueil
     }
 }
+?>

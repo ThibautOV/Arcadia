@@ -1,0 +1,73 @@
+.custom-navbar {
+    background-color: #556b2f; /* Fond vert olive */
+    display: flex;
+    align-items: center; /* Centrer les éléments verticalement */
+    justify-content: space-between; /* Espace entre le logo et les liens */
+    padding: 0 20px; /* Un peu d'espace à gauche et à droite */
+    height: 90px; /* Hauteur ajustée à la taille du logo */
+}
+
+/* Conteneur du logo à gauche */
+.custom-navbar .navbar-brand {
+    color: #f5deb3 !important; /* Couleur crème pour le logo */
+    display: flex;
+    align-items: center; /* Centrer verticalement */
+    flex-shrink: 0; /* Empêche le logo de rétrécir */
+}
+
+/* Taille du logo */
+.custom-navbar .logo {
+    max-width: 60px; /* Taille du logo */
+    height: auto; /* Garder les proportions du logo */
+}
+
+/* Conteneur des liens, centré et espacé équitablement */
+.custom-navbar .navbar-nav {
+    display: flex;
+    justify-content: center; /* Centrer les liens horizontalement */
+    flex-grow: 1; /* Permet aux liens de se répartir uniformément */
+    padding-left: 500px; /* Espacement entre le logo et les liens */
+}
+
+/* Espacement entre chaque lien */
+.custom-navbar .navbar-nav .nav-item {
+    margin: 0 15px; /* Espacement équitable entre chaque lien */
+}
+
+/* Style des liens */
+.custom-navbar .nav-link {
+    color: #f5deb3 !important; /* Couleur crème des liens */
+}
+
+/* Modifications des liens au survol */
+.custom-navbar .nav-link:hover {
+    color: #d1c089 !important; /* Couleur au survol (jaune clair) */
+}
+
+/* Adaptation pour les écrans plus petits (responsive) */
+@media (max-width: 768px) {
+    .custom-navbar .navbar-nav {
+        text-align: center; /* Centrer les liens */
+        flex-direction: column; /* Aligner les liens verticalement */
+        width: 100%; /* Prendre toute la largeur de l'écran */
+    }
+
+    .custom-navbar .logo {
+        max-width: 60px; /* Réduire la taille du logo sur les petits écrans */
+    }
+
+    .custom-navbar .navbar-toggler {
+        border-color: #f5deb3; /* Contour du bouton de menu */
+    }
+    
+    .custom-navbar .navbar-toggler-icon {
+        background-color: #f5deb3; /* Couleur de l'icône du menu */
+    }
+}
+
+@media (max-width: 480px) {
+    /* Réduire encore plus la taille du logo pour les très petits écrans */
+    .custom-navbar .logo {
+        max-width: 50px; /* Plus petit sur les écrans très petits */
+    }
+}

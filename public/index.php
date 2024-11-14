@@ -1,72 +1,56 @@
 <?php
-// index.php
-require_once 'config.php';
 
-// Récupérer l'action de la requête, ou par défaut 'home'
-$action = $_GET['action'] ?? 'home';
+// Configuration et autoload
+require_once '../config/config.php';
+require_once '../controllers/HomeController.php';
+require_once '../controllers/ServiceController.php';
+require_once '../controllers/HabitatController.php';
+require_once '../controllers/AnimalController.php';
+require_once '../controllers/AuthController.php';
+require_once '../controllers/ContactController.php';
 
+// Connexion à la base de données
+$database = new Database();
+$db = $database->getConnection(); // La connexion DB
+
+// Fonction pour charger la vue avec des données
+function loadView($viewPath, $data = []) {
+    extract($data);
+    include "../views/{$viewPath}";
+}
+
+// Récupération de l'action depuis l'URL
+$action = isset($_GET['action']) ? $_GET['action'] : 'home'; // Page d'accueil par défaut
+
+// Routage vers le contrôleur et la méthode appropriée
 switch ($action) {
     case 'home':
-        require 'Controllers/HomeController.php';
-        $controller = new HomeController();
-        $controller->index();
-        break;
-    
-    case 'listServices':
-        require 'Controllers/ServiceController.php';
-        $controller = new ServiceController();
-        $controller->listServices();
+        $habitatController = new HabitatController($db);
+        $habitatController->listHabitatsOnHomePage(); 
         break;
 
-    case 'listHabitats':
-        // Inclure le fichier du modèle HabitatModel
-        require 'models/HabitatModel.php';
-
-        // Créer une connexion à la base de données
-        $dbConnection = getDatabaseConnection();
-
-        // Instancier le modèle des habitats avec la connexion à la base de données
-        $habitatModel = new HabitatModel($dbConnection);  // Le modèle est maintenant bien instancié
-
-        // Inclure le fichier du contrôleur HabitatController
-        require 'Controllers/HabitatController.php';
-
-        // Instancier le contrôleur des habitats et lui passer le modèle
-        $habitatController = new HabitatController($dbConnection);  // Le modèle est bien passé ici
-
-        // Appeler la méthode listHabitats et récupérer les données
-        $habitatController->showHabitats();  // Appel direct à la méthode du contrôleur
+    case 'service':
+        $controller = new ServiceController($db);
+        $controller->listServices(); 
         break;
 
-    // Nouveau cas pour la gestion des animaux
-    case 'listAnimals':
-        require 'models/AnimalModel.php';
-
-        // Créer une connexion à la base de données
-        $dbConnection = getDatabaseConnection();
-
-        // Instancier le modèle des animaux avec la connexion à la base de données
-        $animalModel = new AnimalModel($dbConnection);  // Le modèle est maintenant bien instancié
-
-        // Inclure le fichier du contrôleur AnimalController
-        require 'Controllers/AnimalController.php';
-
-        // Instancier le contrôleur des animaux et lui passer le modèle
-        $animalController = new AnimalController($animalModel);  // Le modèle est bien passé ici
-
-        // Appeler la méthode handleRequest et récupérer les données
-        $data = $animalController->handleRequest();  // Le modèle est déjà passé au constructeur
-        $animals = $data['animals'];
-        $habitats = $data['habitats'];
-        $selectedHabitat = $data['selectedHabitat'];
-
-        // Charger la vue des animaux
-        require 'views/animal/list.php';
+    case 'habitat':
+        $controller = new HabitatController($db);
+        $controller->listHabitats();
         break;
 
-    // Ajoutez d'autres routes pour chaque fonctionnalité si nécessaire
+    case 'contact':
+        $controller = new ContactController();
+        $controller->showForm();
+        break;
+
+    case 'login':
+        $controller = new AuthController($db);
+        $controller->login();
+        break;
+
     default:
-        echo "Page non trouvée.";
+        loadView('errors/404.php');
         break;
 }
 ?>

@@ -1,0 +1,202 @@
+:root {
+    --darkGreenOlive: #556B2F; 
+    --wheat: #F5DEB3;         
+    --darkOliveGreen: #6B8E23;
+    --red: #B22222;
+}
+
+/* Reset global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--wheat);
+    color: var(--darkGreenOlive);
+    padding: 20px;
+    line-height: 1.6;
+}
+
+/* En-tête */
+h2 {
+    text-align: center;
+    color: var(--darkGreenOlive);
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+h3 {
+    color: var(--darkGreenOlive);
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--darkGreenOlive);
+    padding-bottom: 5px;
+}
+
+/* Liste des utilisateurs */
+ul {
+    list-style-type: none;
+    margin-bottom: 30px;
+}
+
+li {
+    background-color: var(--wheat);
+    padding: 15px;
+    margin: 10px 0;
+    border: 1px solid var(--darkGreenOlive);
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+li:hover {
+    background-color: var(--darkOliveGreen);
+    color: white;
+}
+
+li form {
+    display: inline;
+}
+
+/* Style des titres de liste */
+li span {
+    font-weight: bold;
+}
+
+/* Formulaires */
+form {
+    background-color: var(--darkGreenOlive);
+    color: var(--wheat);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+form label {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    margin-bottom: 15px;
+    border: 1px solid var(--darkGreenOlive);
+    border-radius: 5px;
+    font-size: 1.1rem;
+}
+
+form input[type="submit"] {
+    background-color: var(--darkGreenOlive);
+    color: var(--wheat);
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+form input[type="submit"]:hover {
+    background-color: darkolivegreen;
+}
+
+/* Messages d'erreur ou de confirmation */
+p {
+    color: var(--darkGreenOlive);
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Style du bouton de suppression */
+input[type="submit"][value="Supprimer"] {
+    background-color: var(--red); 
+    color: #fff;
+}
+
+input[type="submit"][value="Supprimer"]:hover {
+    background-color: #8B0000;
+}
+
+/* Tableau et filtre des consultations */
+h3 + form {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: var(--darkGreenOlive);
+    border-radius: 8px;
+}
+
+form input[type="text"],
+form input[type="date"] {
+    width: auto;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 15px;
+}
+
+form input[type="submit"] {
+    width: auto;
+    display: inline-block;
+}
+
+/* Tableaux */
+ul {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+
+    form {
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    form input[type="submit"] {
+        width: auto;
+    }
+
+    ul li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    form label {
+        font-size: 1rem;
+    }
+
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="password"],
+    form select {
+        font-size: 1rem;
+    }
+}

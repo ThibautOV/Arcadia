@@ -1,29 +1,19 @@
-<?php
-require_once '../Models/HabitatModel.php';
+<?php include_once __DIR__ . '/../menu/main_menu.php'; ?>
 
-// Connexion à la base de données
-$db = new PDO('mysql:host=localhost;dbname=zoo_db', 'username', 'password');
-
-// Création d'une instance du modèle d'habitat
-$habitatModel = new HabitatModel($db);
-$habitats = $habitatModel->getAllHabitats();
-?>
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Habitats</title>
-</head>
-<body>
-    <h2>Habitats</h2>
-
-    <ul>
-        <?php foreach ($habitats as $habitat): ?>
-            <li>
-                <?= htmlspecialchars($habitat['name']) ?>: <?= htmlspecialchars($habitat['description']) ?>
-            </li>
-        <?php endforeach; ?>
-    </ul>
-</body>
-</html>
+<div class="habitats-page">
+    <h1>Nos Habitats</h1>
+    <div class="habitat-list">
+        <?php if (isset($habitats) && !empty($habitats)): ?>
+            <?php foreach ($habitats as $habitat): ?>
+                <div class="habitat-card">
+                    <a href="detail.php?id=<?= htmlspecialchars($habitat['id']); ?>">
+                        <img src="path_to_image/<?= htmlspecialchars($habitat['image']); ?>" alt="<?= htmlspecialchars($habitat['name']); ?>" class="habitat-image">
+                        <h2><?= htmlspecialchars($habitat['name']); ?></h2>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Aucun habitat disponible pour le moment.</p>
+        <?php endif; ?>
+    </div>
+</div>

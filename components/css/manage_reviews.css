@@ -1,0 +1,98 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5deb3; /* Wheat pour le fond de la page */
+    color: #556b2f; /* Dark Green Olive pour tous les textes */
+}
+
+h2 {
+    text-align: center;
+    color: #556b2f; /* Dark Green Olive pour le titre */
+    font-size: 2em;
+    margin-bottom: 30px;
+}
+
+/* Table Styles */
+table {
+    width: 90%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #fafad2; /* Wheat pour le fond de la table */
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+thead {
+    background-color: #fafad2; /* Wheat pour l'entête de la table */
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+    color: #2f4f4f; /* Dark Green Olive pour tous les textes dans la table */
+}
+
+th {
+    font-weight: bold;
+}
+
+td {
+    background-color: #fafad2; /* Wheat pour le fond des lignes de la table */
+}
+
+/* Links in Table */
+a {
+    color: #2f4f4f; /* Dark Green Olive pour les liens */
+    text-decoration: none;
+}
+
+a:hover {
+    color: #556b2f; /* Dark Green Olive pour le survol des liens */
+}
+
+/* No Reviews Message */
+p {
+    text-align: center;
+    color: #556b2f; /* Dark Green Olive pour le texte */
+    font-size: 1.2em;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    h2 {
+        font-size: 1.8em;
+    }
+
+    table {
+        width: 100%;
+        padding: 10px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    a {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 1.5em;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    th, td {
+        padding: 6px;
+    }
+
+    a {
+        font-size: 0.9em;
+    }
+}

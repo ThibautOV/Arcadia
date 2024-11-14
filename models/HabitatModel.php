@@ -1,39 +1,73 @@
 <?php
+
 class HabitatModel {
     private $db;
 
-    // Le constructeur attend une connexion à la base de données
     public function __construct($db) {
         $this->db = $db;
     }
 
-    // Méthode pour récupérer tous les habitats
+    public function createHabitat($name, $description, $image_url) {
+        try {
+            $query = "INSERT INTO habitats (name, description, image_url) VALUES (:name, :description, :image_url)";
+            $statement = $this->db->prepare($query);
+            $statement->bindValue(':name', $name);
+            $statement->bindValue(':description', $description);
+            $statement->bindValue(':image_url', $image_url);
+            $statement->execute();
+        } catch (PDOException $e) {
+            error_log("Erreur lors de l'ajout de l'habitat : " . $e->getMessage());
+        }
+    }
+
     public function getAllHabitats() {
-        $query = "SELECT * FROM habitats";
-        $statement = $this->db->prepare($query);
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $query = "SELECT * FROM habitats";
+            $statement = $this->db->prepare($query);
+            $statement->execute();
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la récupération des habitats : " . $e->getMessage());
+            return [];
+        }
     }
 
-    // Méthode pour créer un habitat
-    public function createHabitat($name, $description, $images) {
-        // Sérialisation des images en JSON
-        $imagesJson = json_encode(explode(',', $images));
-
-        $query = "INSERT INTO habitats (name, description, images) VALUES (:name, :description, :images)";
-        $statement = $this->db->prepare($query);
-        $statement->bindValue(':name', $name);
-        $statement->bindValue(':description', $description);
-        $statement->bindValue(':images', $imagesJson);
-        $statement->execute();
+    public function getHabitatById($id) {
+        try {
+            $query = "SELECT * FROM habitats WHERE id = :id";
+            $statement = $this->db->prepare($query);
+            $statement->bindValue(':id', $id, PDO::PARAM_INT);
+            $statement->execute();
+            return $statement->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la récupération de l'habitat par ID : " . $e->getMessage());
+            return null;
+        }
     }
 
-    // Méthode pour supprimer un habitat
+    public function updateHabitat($id, $name, $description, $image_url) {
+        try {
+            $query = "UPDATE habitats SET name = :name, description = :description, image_url = :image_url WHERE id = :id";
+            $statement = $this->db->prepare($query);
+            $statement->bindValue(':id', $id, PDO::PARAM_INT);
+            $statement->bindValue(':name', $name);
+            $statement->bindValue(':description', $description);
+            $statement->bindValue(':image_url', $image_url);
+            $statement->execute();
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la mise à jour de l'habitat : " . $e->getMessage());
+        }
+    }
+
     public function deleteHabitat($id) {
-        $query = "DELETE FROM habitats WHERE id = :id";
-        $statement = $this->db->prepare($query);
-        $statement->bindValue(':id', $id, PDO::PARAM_INT);
-        $statement->execute();
+        try {
+            $query = "DELETE FROM habitats WHERE id = :id";
+            $statement = $this->db->prepare($query);
+            $statement->bindValue(':id', $id, PDO::PARAM_INT);
+            $statement->execute();
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la suppression de l'habitat : " . $e->getMessage());
+        }
     }
 }
 ?>

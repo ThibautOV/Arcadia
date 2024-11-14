@@ -1,82 +1,134 @@
+<?php
+// Inclure les fichiers nécessaires
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../controllers/AdminController.php';
+require_once __DIR__ . '/../../utils/MailUtils.php';
+
+// Connexion à la base de données
+$database = new Database();
+$db = $database->getConnection();
+
+if (!$db) {
+    die("Erreur de connexion à la base de données");
+}
+
+// Initialiser le contrôleur
+$controller = new AdminController($db);
+$message = '';
+
+// Gestion de la création ou suppression d'utilisateur
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    try {
+        if ($_POST['action'] === 'create') {
+            $firstName = $_POST['first_name'];
+            $lastName = $_POST['last_name'];
+            $email = $_POST['email'];
+            $role = $_POST['role']; // Récupération du rôle
+            $password = $_POST['password'];
+
+            // Créer un utilisateur et envoyer un e-mail
+            $message = $controller->createUser($firstName, $lastName, $email, $role, $password);
+        } elseif ($_POST['action'] === 'delete') {
+            $userId = $_POST['user_id'];
+            $message = $controller->deleteUser($userId);
+        }
+    } catch (Exception $e) {
+        $message = "Erreur : " . $e->getMessage();
+    }
+}
+
+// Récupérer tous les utilisateurs
+$users = $controller->getUsers();
+
+// Récupérer le nombre de consultations par animal
+$consultationsCount = $controller->getConsultationsCount();
+
+// Récupérer les consultations filtrées si un filtre est appliqué
+$animalFilter = $_GET['animal'] ?? null;
+$dateFilter = $_GET['date'] ?? null;
+$consultations = $controller->getFilteredConsultations($animalFilter, $dateFilter);
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Espace Administrateur</title>
-    <link rel="stylesheet" href="../../public/css/styles.css">
+    <title>Gestion des Utilisateurs</title>
+    <link rel="stylesheet" href="../../components/css/dashboard_admin.css">
 </head>
 <body>
-    <h1>Espace Administrateur</h1>
+    <h2>Gestion des Utilisateurs</h2>
 
-    <?php if (!empty($message)): ?>
-        <div class="alert"><?php echo htmlspecialchars($message); ?></div>
-    <?php endif; ?>
+    <?php if (!empty($message)) echo "<p>$message</p>"; ?>
 
-    <h2>Créer un Compte Utilisateur</h2>
-    <form method="POST" action="index.php?action=create_user">
-        <label>Prénom: <input type="text" name="firstName" required></label><br>
-        <label>Nom: <input type="text" name="lastName" required></label><br>
-        <label>Email (username): <input type="email" name="email" required></label><br>
+    <h3>Liste des Utilisateurs</h3>
+    <ul>
+        <?php if (!empty($users)): ?>
+            <?php foreach ($users as $user): ?>
+                <li>
+                    <!-- Affichage du nom et du rôle avec traduction du rôle -->
+                    <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?> 
+                    (<?= htmlspecialchars($user['role'] === 'employe' ? 'Employé' : 'Vétérinaire') ?>)
+                    
+                    <!-- Formulaire de suppression avec confirmation -->
+                    <form action="manage_users.php" method="post" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
+                        <input type="submit" value="Supprimer">
+                    </form>
+                </li>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Aucun utilisateur trouvé.</p>
+        <?php endif; ?>
+    </ul>
+
+    <h3>Ajouter un Utilisateur</h3>
+    <form action="manage_users.php" method="post">
+        <input type="hidden" name="action" value="create">
+        <label>Prénom: <input type="text" name="first_name" required></label><br>
+        <label>Nom: <input type="text" name="last_name" required></label><br>
+        <label>Email: <input type="email" name="email" required></label><br>
         <label>Rôle:
-            <select name="role" required>
-                <option value="employee">Employé</option>
-                <option value="vet">Vétérinaire</option>
+            <select name="role">
+                <option value="employe">Employé</option>
+                <option value="veterinaire">Vétérinaire</option>
             </select>
         </label><br>
         <label>Mot de passe: <input type="password" name="password" required></label><br>
         <input type="submit" value="Créer l'Utilisateur">
     </form>
 
-    <h2>Liste des Utilisateurs</h2>
+    <h3>Tableau de Bord - Nombre de Consultations par Animal</h3>
     <ul>
-        <?php if (!empty($users)): ?>
-            <?php foreach ($users as $user): ?>
-                <li><?php echo htmlspecialchars($user['email']); ?> - <?php echo htmlspecialchars($user['role']); ?></li>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <li>Aucun utilisateur trouvé.</li>
-        <?php endif; ?>
+        <?php foreach ($consultationsCount as $consultation): ?>
+            <li>
+                <?= htmlspecialchars($consultation['animal']) ?>: <?= htmlspecialchars($consultation['consultation_count']) ?> consultations
+            </li>
+        <?php endforeach; ?>
     </ul>
 
-    <h2>Comptes Rendus Vétérinaires</h2>
-    <form method="GET" action="index.php?action=view_reports">
-        <label>Filtrer par Animal:
-            <input type="text" name="animal" placeholder="Nom de l'animal">
-        </label>
-        <label>Filtrer par Date:
-            <input type="date" name="date">
-        </label>
+    <h3>Consultations</h3>
+    <form method="get">
+        <label for="animal">Filtrer par animal: </label>
+        <input type="text" id="animal" name="animal" value="<?= htmlspecialchars($animalFilter) ?>"><br>
+        <label for="date">Filtrer par date: </label>
+        <input type="date" id="date" name="date" value="<?= htmlspecialchars($dateFilter) ?>"><br>
         <input type="submit" value="Filtrer">
     </form>
-    
+
     <ul>
-        <?php if (!empty($reports)): ?>
-            <?php foreach ($reports as $report): ?>
+        <?php if (!empty($consultations)): ?>
+            <?php foreach ($consultations as $consultation): ?>
                 <li>
-                    <?php echo htmlspecialchars($report['animal_name']) . ' - ' . htmlspecialchars($report['date']); ?>
-                    <br>
-                    Détails: <?php echo htmlspecialchars($report['details']); ?>
+                    Animal: <?= htmlspecialchars($consultation['animal']) ?><br>
+                    Date: <?= htmlspecialchars($consultation['date']) ?><br>
+                    Description: <?= htmlspecialchars($consultation['description']) ?><br>
                 </li>
             <?php endforeach; ?>
         <?php else: ?>
-            <li>Aucun compte rendu trouvé.</li>
+            <p>Aucune consultation trouvée.</p>
         <?php endif; ?>
     </ul>
-
-    <h2>Dashboard des Consultations</h2>
-    <p>Nombre de consultations par animal :</p>
-    <ul>
-        <?php 
-        // Assurez-vous que la variable est définie
-        if (isset($consultationStats) && !empty($consultationStats)): 
-            foreach ($consultationStats as $consultation): ?>
-                <li><?php echo htmlspecialchars($consultation['animal_name']) . ": " . htmlspecialchars($consultation['count']); ?></li>
-            <?php endforeach; 
-        else: ?>
-            <li>Aucune consultation enregistrée.</li>
-        <?php endif; ?>
-    </ul>
-
-    <a href="../auth/logout.php">Se Déconnecter</a>
 </body>
 </html>
