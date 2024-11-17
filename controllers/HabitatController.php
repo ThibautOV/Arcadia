@@ -7,10 +7,13 @@ require_once __DIR__ . '/../models/AnimalModel.php';   // Inclure AnimalModel
 class HabitatController {
     private $habitatModel;
     private $animalModel;
+    private $db;
 
+    // Constructeur : Ajout de la connexion DB
     public function __construct($db) {
-        $this->habitatModel = new HabitatModel($db);  // Utilisation de HabitatModel
-        $this->animalModel = new AnimalModel($db);    // Utilisation de AnimalModel
+        $this->db = $db;  // Connexion à la base de données
+        $this->habitatModel = new HabitatModel($this->db);  // Utilisation de HabitatModel
+        $this->animalModel = new AnimalModel($this->db);    // Utilisation de AnimalModel
     }
 
     // Liste des habitats : cette méthode récupère tous les habitats et les passe à la vue
@@ -20,8 +23,18 @@ class HabitatController {
 
     // Méthode pour afficher la liste des habitats dans la vue habitat/index.php
     public function listHabitats() {
-        $habitats = $this->getHabitats(); // Récupère tous les habitats
-        include __DIR__ . '/../views/habitat/index.php'; // Affiche la vue
+        // Récupérer tous les habitats via la méthode getHabitats
+        $habitats = $this->getHabitats();
+
+        // Vérifier si la récupération des habitats a fonctionné
+        if (!$habitats) {
+            $message = "Aucun habitat trouvé.";
+            include __DIR__ . '/../views/errors/404.php';  // Afficher un message d'erreur si aucun habitat trouvé
+            return;
+        }
+
+        // Inclure la vue habitat/index.php qui affichera les habitats
+        include __DIR__ . '/../views/habitat/index.php'; 
     }
 
     // Gérer les différentes actions (création, suppression d'habitat, etc.)
@@ -40,6 +53,7 @@ class HabitatController {
                     $image_url = trim($_POST['image_url'] ?? '');
 
                     if (!empty($name) && !empty($description) && !empty($image_url)) {
+                        // Création de l'habitat via le modèle
                         $this->habitatModel->createHabitat($name, $description, $image_url);
                         header("Location: manage_habitats.php");
                         exit();
@@ -65,6 +79,7 @@ class HabitatController {
                     break;
             }
         }
+
         return $message;
     }
 
@@ -78,6 +93,7 @@ class HabitatController {
             $image_url = trim($_POST['image_url'] ?? '');
 
             if (!empty($name) && !empty($description) && !empty($image_url)) {
+                // Créer l'habitat via le modèle
                 $this->habitatModel->createHabitat($name, $description, $image_url);
                 header("Location: /habitat");
                 exit();
@@ -85,17 +101,20 @@ class HabitatController {
                 $message = "Tous les champs sont requis pour créer un habitat.";
             }
         }
-        include __DIR__ . '/../views/habitat/create.php';  // Vue pour créer un habitat
+
+        // Affichage de la vue de création d'habitat
+        include __DIR__ . '/../views/habitat/create.php';  
     }
 
     // Mettre à jour un habitat
     public function updateHabitat($id) {
         $message = '';
-        $habitat = $this->habitatModel->getHabitatById($id);  // Récupérer l'habitat existant
+        // Récupérer l'habitat existant
+        $habitat = $this->habitatModel->getHabitatById($id);
 
         if (!$habitat) {
             $message = "L'habitat spécifié est introuvable.";
-            include __DIR__ . '/../views/errors/404.php';
+            include __DIR__ . '/../views/errors/404.php';  // Afficher une erreur 404 si l'habitat n'existe pas
             return;
         }
 
@@ -105,6 +124,7 @@ class HabitatController {
             $image_url = trim($_POST['image_url'] ?? '');
 
             if (!empty($name) && !empty($description) && !empty($image_url)) {
+                // Mise à jour de l'habitat
                 $this->habitatModel->updateHabitat($id, $name, $description, $image_url);
                 header("Location: /habitat");
                 exit();
@@ -112,20 +132,42 @@ class HabitatController {
                 $message = "Tous les champs sont requis pour mettre à jour cet habitat.";
             }
         }
-        include __DIR__ . '/../views/habitat/update.php';  // Vue pour mettre à jour un habitat
+        // Affichage de la vue de mise à jour d'habitat
+        include __DIR__ . '/../views/habitat/update.php';  
     }
 
     // Supprimer un habitat
     public function deleteHabitat($id) {
-        $this->habitatModel->deleteHabitat($id);  // Suppression de l'habitat
+        // Suppression de l'habitat
+        $this->habitatModel->deleteHabitat($id);
         header("Location: /habitat");
         exit();
     }
 
     // Méthode pour afficher la liste des habitats sur la page d'accueil
-    public function listHabitatsOnHomePage() {
+    public function listHabitatsOnHabitatPage() {
+        // Récupérer tous les habitats
         $habitats = $this->getHabitats();
-        include __DIR__ . '/../views/home/index.php';  // Chemin de la vue de la page d'accueil
+        include __DIR__ . '/../views/habitat/index.php';  // Afficher la vue de la page d'accueil
+    }
+
+    // Ajouter des méthodes pour récupérer des habitats spécifiques si nécessaire
+
+    // Exemple d'une méthode qui récupère un habitat par son ID
+    public function getHabitatById($id) {
+        $habitat = $this->habitatModel->getHabitatById($id);
+        if (!$habitat) {
+            include __DIR__ . '/../views/errors/404.php';
+            exit();
+        }
+        return $habitat;
+    }
+
+    // Méthode pour récupérer les habitats et les transmettre à la vue
+    public function showHabitats() {
+        $habitats = $this->getHabitats(); // Récupérer tous les habitats
+        include __DIR__ . '/../views/habitat/index.php'; // Afficher la vue avec les habitats
     }
 }
+
 ?>

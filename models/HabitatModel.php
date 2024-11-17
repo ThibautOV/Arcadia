@@ -17,7 +17,10 @@ class HabitatModel {
             $statement->execute();
         } catch (PDOException $e) {
             error_log("Erreur lors de l'ajout de l'habitat : " . $e->getMessage());
+            // On peut aussi afficher un message pour l'utilisateur dans certains cas
+            return false;
         }
+        return true;
     }
 
     public function getAllHabitats() {
@@ -25,9 +28,20 @@ class HabitatModel {
             $query = "SELECT * FROM habitats";
             $statement = $this->db->prepare($query);
             $statement->execute();
-            return $statement->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Récupérer tous les habitats sous forme de tableau associatif
+            $habitats = $statement->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Si la requête n'a pas retourné de résultats, on peut loguer et renvoyer un tableau vide
+            if (!$habitats) {
+                error_log("Aucun habitat trouvé dans la base de données.");
+                return [];  // Retourner un tableau vide si aucun habitat trouvé
+            }
+
+            return $habitats;
         } catch (PDOException $e) {
             error_log("Erreur lors de la récupération des habitats : " . $e->getMessage());
+            // Retourner un tableau vide en cas d'erreur
             return [];
         }
     }
@@ -38,6 +52,8 @@ class HabitatModel {
             $statement = $this->db->prepare($query);
             $statement->bindValue(':id', $id, PDO::PARAM_INT);
             $statement->execute();
+            
+            // Retourne un seul habitat ou null si non trouvé
             return $statement->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Erreur lors de la récupération de l'habitat par ID : " . $e->getMessage());
