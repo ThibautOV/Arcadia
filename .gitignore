@@ -3,6 +3,7 @@
 config/database.php
 config/NoSql.php
 config/config.php
+.env
 
 # Ignorer le dossier vendor (bibliothèques tierces)
 

@@ -1,6 +1,6 @@
 <?php
 
-// Inclure le modèle HabitatModel et AnimalModel
+// Inclure les modèles HabitatModel et AnimalModel
 require_once __DIR__ . '/../models/HabitatModel.php';  // Assurez-vous que le chemin vers HabitatModel.php est correct
 require_once __DIR__ . '/../models/AnimalModel.php';   // Inclure AnimalModel
 
@@ -144,23 +144,30 @@ class HabitatController {
         exit();
     }
 
-    // Méthode pour afficher la liste des habitats sur la page d'accueil
-    public function listHabitatsOnHabitatPage() {
-        // Récupérer tous les habitats
-        $habitats = $this->getHabitats();
-        include __DIR__ . '/../views/habitat/index.php';  // Afficher la vue de la page d'accueil
-    }
-
-    // Ajouter des méthodes pour récupérer des habitats spécifiques si nécessaire
-
-    // Exemple d'une méthode qui récupère un habitat par son ID
-    public function getHabitatById($id) {
-        $habitat = $this->habitatModel->getHabitatById($id);
-        if (!$habitat) {
-            include __DIR__ . '/../views/errors/404.php';
-            exit();
+    // Afficher les détails d'un habitat spécifique
+    public function showHabitatDetails($id) {
+        // Vérifier si l'id est un entier valide
+        if (!is_numeric($id) || $id <= 0) {
+            $message = "ID d'habitat invalide.";
+            include __DIR__ . '/../views/errors/404.php';  // Afficher une erreur si l'ID n'est pas valide
+            return;
         }
-        return $habitat;
+
+        // Récupérer l'habitat par ID
+        $habitat = $this->habitatModel->getHabitatById($id);
+
+        // Vérifier si l'habitat existe
+        if (!$habitat) {
+            $message = "L'habitat spécifié est introuvable.";
+            include __DIR__ . '/../views/errors/404.php';  // Afficher une erreur 404 si l'habitat n'existe pas
+            return;
+        }
+
+        // Récupérer les animaux associés à l'habitat
+        $animals = $this->animalModel->getAnimalsByHabitat($id);
+
+        // Passer les variables à la vue
+        include __DIR__ . '/../views/habitat/detail.php'; // S'assurer que $habitat et $animals sont envoyés à la vue
     }
 
     // Méthode pour récupérer les habitats et les transmettre à la vue
@@ -169,5 +176,4 @@ class HabitatController {
         include __DIR__ . '/../views/habitat/index.php'; // Afficher la vue avec les habitats
     }
 }
-
 ?>
