@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../../controllers/AdminController.php';
-require_once __DIR__ . '/../../utils/MailUtils.php';
+require_once __DIR__ . '/../../../config/database.php';
+require_once __DIR__ . '/../../../controllers/AdminController.php';
+require_once __DIR__ . '/../../../utils/MailUtils.php';
 
 
 $database = new Database();
@@ -16,17 +16,17 @@ if (!$db) {
 $controller = new AdminController($db);
 $message = '';
 
-// Gestion de la création ou suppression d'utilisateur
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         if ($_POST['action'] === 'create') {
             $firstName = $_POST['first_name'];
             $lastName = $_POST['last_name'];
             $email = $_POST['email'];
-            $role = $_POST['role']; // Récupération du rôle
+            $role = $_POST['role']; 
             $password = $_POST['password'];
 
-            // Créer un utilisateur et envoyer un e-mail
+            
             $message = $controller->createUser($firstName, $lastName, $email, $role, $password);
         } elseif ($_POST['action'] === 'delete') {
             $userId = $_POST['user_id'];
@@ -37,10 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Récupérer tous les utilisateurs
+
 $users = $controller->getUsers();
 
-// Récupérer le nombre de consultations par animal
+
 $consultationsCount = $controller->getConsultationsCount();
 
 
