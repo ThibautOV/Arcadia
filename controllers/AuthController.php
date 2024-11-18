@@ -1,11 +1,11 @@
 <?php
-require_once 'models/User.php';  // Inclure le modèle User
+require_once 'models/UserModel.php';  // Remplacer User par UserModel
 
 class AuthController {
     private $model;
 
     public function __construct($db) {
-        $this->model = new User($db);
+        $this->model = new UserModel($db);  // Utilisation de UserModel
     }
 
     public function login() {
@@ -13,10 +13,9 @@ class AuthController {
             $email = $_POST['email'];
             $password = $_POST['password'];
 
-            // Vérifier les identifiants dans la base de données
-            $stmt = $this->model->getUserByEmail($email);
+            // Utilisation d'une méthode de UserModel pour récupérer un utilisateur par email
+            $stmt = $this->model->getUserByEmail($email);  // Ajouter cette méthode dans UserModel si elle n'existe pas encore
             if ($stmt && password_verify($password, $stmt['password'])) {
-                // Authentification réussie
                 session_start();
                 $_SESSION['user_id'] = $stmt['id'];
                 $_SESSION['role'] = $stmt['role'];

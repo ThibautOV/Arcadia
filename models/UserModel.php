@@ -48,4 +48,15 @@ class UserModel {
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Récupérer un utilisateur par son email
+    public function getUserByEmail($email) {
+        $query = "SELECT id, first_name, last_name, email, role, password FROM users WHERE email = :email LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);  // Retourne l'utilisateur trouvé ou false si aucun utilisateur n'est trouvé
+    }
 }
+?>

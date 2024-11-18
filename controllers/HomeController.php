@@ -1,33 +1,35 @@
 <?php
-// HomeController.php
+
 
 require_once 'model/Database.php';
-require_once 'NoSql.php'; // Pour les avis NoSQL
+require_once 'NoSql.php';
 
-class HomeController {
+class HomeController
+{
     private $db;
     private $noSql;
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->db = $db;
-        $this->noSql = new NoSql(); // Initialiser la classe NoSQL
+        $this->noSql = new NoSql();
     }
 
-    public function index() {
-        // Récupération des habitats depuis la base de données
+    public function index()
+    {
+
         $habitats = $this->getHabitats();
-        
-        // Récupération des avis depuis le fichier NoSQL
-        $reviews = $this->noSql->getReviews();
 
-        // Chargement de la vue avec les données
-        include 'views/home/index.php';
+
+
+
+        include 'public/views/home/index.php';
     }
 
-    private function getHabitats() {
+    private function getHabitats()
+    {
         $stmt = $this->db->prepare("SELECT id, name, description, image_url FROM habitats");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
-?>

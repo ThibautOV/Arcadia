@@ -1,19 +1,18 @@
-?php
-require_once '../../models/ReportModel.php'; // Chemin ajusté pour accéder au fichier
-require_once '../../config/database.php'; // Connexion à la base de données
+<?php
+require_once '../../models/ReportModel.php'; 
+require_once '../../config/database.php'; 
 
-// Connexion à la base de données
 $database = new Database();
 $db = $database->getConnection();
 
-// Création d'une instance de ReportModel
+
 $reportModel = new ReportModel($db);
 
-// Traitement des filtres
+
 $animalId = isset($_GET['animal']) ? $_GET['animal'] : null;
 $date = isset($_GET['date']) ? $_GET['date'] : null;
 
-// Récupération des comptes rendus avec filtres
+
 $reports = $reportModel->getReports($animalId, $date);
 ?>
 
