@@ -1,15 +1,15 @@
 <?php
-require_once '../../models/ServiceModel.php'; // Chemin ajusté pour accéder au fichier
-require_once '../../config/database.php'; // Ajouté si nécessaire pour accéder à la configuration de la base de données
+require_once '../../../models/ServiceModel.php';
+require_once '../../../config/database.php';
 
-// Connexion à la base de données
+
 $database = new Database();
 $db = $database->getConnection();
 
-// Création d'une instance de ServiceModel
+
 $serviceModel = new ServiceModel($db);
 
-// Traitement des requêtes POST
+
 $message = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST['action'] === 'create') {
@@ -23,16 +23,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Récupération des services
+
 $services = $serviceModel->getAllServices();
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <title>Gestion des Services</title>
 </head>
+
 <body>
     <h2>Gestion des Services</h2>
     <?php if (!empty($message)) echo "<p>$message</p>"; ?>
@@ -59,4 +61,5 @@ $services = $serviceModel->getAllServices();
         <input type="submit" value="Créer le Service">
     </form>
 </body>
+
 </html>

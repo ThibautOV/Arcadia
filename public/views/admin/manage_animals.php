@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../../models/AnimalModel.php';
-require_once __DIR__ . '/../../controllers/AnimalController.php';
+require_once __DIR__ . '/../../../config/database.php';
+require_once __DIR__ . '/../../../models/AnimalModel.php';
+require_once __DIR__ . '/../../../controllers/AnimalController.php';
 
 $database = new Database();
 $pdo = $database->getConnection();
@@ -11,7 +11,7 @@ $controller = new AnimalController($animalModel);
 $data = $controller->handleRequest();
 
 $animals = $data['animals'];
-$habitats = $data['habitats'];  // Liste d'habitats
+$habitats = $data['habitats']; 
 $selectedHabitat = $data['selectedHabitat'];
 ?>
 
@@ -30,7 +30,7 @@ $selectedHabitat = $data['selectedHabitat'];
         <input type="text" name="breed" placeholder="Race" required>
         <input type="text" name="health_status" placeholder="État de santé" required>
 
-        <!-- Sélectionner un habitat parmi les options fixes -->
+        
         <select name="habitat" required>
             <option value="">Sélectionnez un habitat</option>
             <?php foreach ($habitats as $habitat): ?>

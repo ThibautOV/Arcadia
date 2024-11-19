@@ -1,19 +1,19 @@
 <?php
 
-// Inclure les fichiers nécessaires
-require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../../controllers/HabitatController.php';
 
-// Utiliser la méthode statique getConnection() pour obtenir la connexion à la base de données
+require_once __DIR__ . '/../../../config/database.php';
+require_once __DIR__ . '/../../../controllers/HabitatController.php';
+
+
 $db = Database::getConnection();
 
-// Créer une instance du contrôleur HabitatController avec la connexion à la base de données
+
 $controller = new HabitatController($db);
 
-// Traiter la requête (création ou suppression)
+
 $message = $controller->handleRequest();
 
-// Obtenir les habitats
+
 $habitats = $controller->getHabitats();
 ?>
 

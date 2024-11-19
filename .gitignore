@@ -1,10 +1,38 @@
-# Ignorer les fichiers de configuration sensibles
-
-config/database.php
-config/NoSql.php
-config/config.php
+# Environnement
 .env
+config/config.php
 
-# Ignorer le dossier vendor (bibliothèques tierces)
+# Dépendances PHP
+/vendor/
 
-vendor/
+# Fichiers générés par Composer
+composer.lock
+
+# Logs
+/logs/
+*.log
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Fichiers spécifiques à l'éditeur
+.vscode/
+.idea/
+
+# Fichiers Docker spécifiques
+.dockerignore
+docker-compose.override.yml
+php.ini
+
+# Fichiers générés ou sensibles
+database_export.sql
+
+# CSS et JS générés (si applicable)
+public/components/css/*.css
+public/components/js/*.js
+
+# Divers
+*.bak
+*.tmp
+*.swp

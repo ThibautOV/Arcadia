@@ -1,10 +1,10 @@
 <?php
-// Inclure les fichiers nécessaires
-require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../../controllers/AdminController.php';
-require_once __DIR__ . '/../../utils/MailUtils.php';
 
-// Connexion à la base de données
+require_once __DIR__ . '../../../../config/database.php';
+require_once __DIR__ . '../../../../controllers/AdminController.php';
+require_once __DIR__ . '../../../../utils/MailUtils.php';
+
+
 $database = new Database();
 $db = $database->getConnection();
 
@@ -12,21 +12,20 @@ if (!$db) {
     die("Erreur de connexion à la base de données");
 }
 
-// Initialiser le contrôleur
+
 $controller = new AdminController($db);
 $message = '';
 
-// Gestion de la création ou suppression d'utilisateur
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         if ($_POST['action'] === 'create') {
             $firstName = $_POST['first_name'];
             $lastName = $_POST['last_name'];
             $email = $_POST['email'];
-            $role = $_POST['role']; // Récupération du rôle
+            $role = $_POST['role'];
             $password = $_POST['password'];
 
-            // Créer un utilisateur et envoyer un e-mail
             $message = $controller->createUser($firstName, $lastName, $email, $role, $password);
         } elseif ($_POST['action'] === 'delete') {
             $userId = $_POST['user_id'];
@@ -37,13 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Récupérer tous les utilisateurs
+
 $users = $controller->getUsers();
 
-// Récupérer le nombre de consultations par animal
+
 $consultationsCount = $controller->getConsultationsCount();
 
-// Récupérer les consultations filtrées si un filtre est appliqué
+
 $animalFilter = $_GET['animal'] ?? null;
 $dateFilter = $_GET['date'] ?? null;
 $consultations = $controller->getFilteredConsultations($animalFilter, $dateFilter);
@@ -51,11 +50,13 @@ $consultations = $controller->getFilteredConsultations($animalFilter, $dateFilte
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <title>Gestion des Utilisateurs</title>
     <link rel="stylesheet" href="../../components/css/dashboard_admin.css">
 </head>
+
 <body>
     <h2>Gestion des Utilisateurs</h2>
 
@@ -66,10 +67,10 @@ $consultations = $controller->getFilteredConsultations($animalFilter, $dateFilte
         <?php if (!empty($users)): ?>
             <?php foreach ($users as $user): ?>
                 <li>
-                    <!-- Affichage du nom et du rôle avec traduction du rôle -->
-                    <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?> 
+
+                    <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?>
                     (<?= htmlspecialchars($user['role'] === 'employe' ? 'Employé' : 'Vétérinaire') ?>)
-                    
+
                     <!-- Formulaire de suppression avec confirmation -->
                     <form action="manage_users.php" method="post" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
                         <input type="hidden" name="action" value="delete">
@@ -131,4 +132,5 @@ $consultations = $controller->getFilteredConsultations($animalFilter, $dateFilte
         <?php endif; ?>
     </ul>
 </body>
+
 </html>

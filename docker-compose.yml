@@ -1,0 +1,26 @@
+services:
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: ovelacque_arcadia
+      MYSQL_USER: ovelacque_thibau
+      MYSQL_PASSWORD: C6b9236a.
+    ports:
+      - "3306:3306"
+
+  web:
+    build: .
+    container_name: web
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: ovelacque_arcadia
+      DB_USER: ovelacque_thibau
+      DB_PASS: C6b9236a.
+    volumes:
+      - .:/var/www/html

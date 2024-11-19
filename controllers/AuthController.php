@@ -1,11 +1,12 @@
 <?php
-require_once 'models/UserModel.php';  // Remplacer User par UserModel
+// Utilisation du chemin correct pour inclure UserModel
+require_once __DIR__ . '/../models/UserModel.php';  // Le dossier 'models' est à un niveau supérieur à 'controllers'
 
 class AuthController {
     private $model;
 
     public function __construct($db) {
-        $this->model = new UserModel($db);  // Utilisation de UserModel
+        $this->model = new UserModel($db);  // Création d'une instance de UserModel
     }
 
     public function login() {
@@ -14,7 +15,7 @@ class AuthController {
             $password = $_POST['password'];
 
             // Utilisation d'une méthode de UserModel pour récupérer un utilisateur par email
-            $stmt = $this->model->getUserByEmail($email);  // Ajouter cette méthode dans UserModel si elle n'existe pas encore
+            $stmt = $this->model->getUserByEmail($email);  // Assure-toi que cette méthode existe dans UserModel
             if ($stmt && password_verify($password, $stmt['password'])) {
                 session_start();
                 $_SESSION['user_id'] = $stmt['id'];
@@ -25,7 +26,7 @@ class AuthController {
                 $error = "Identifiants invalides.";
             }
         }
-        require 'views/auth/login.php';
+        require 'views/auth/login.php';  // Inclut la vue du formulaire de connexion
     }
 
     public function logout() {
