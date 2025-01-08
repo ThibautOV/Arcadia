@@ -1,17 +1,16 @@
 <?php
-require_once '../../models/ReportModel.php'; 
-require_once '../../config/database.php'; 
+$rootDirectory = realpath(__DIR__ . '/../../../');  // remonte trois niveaux jusqu'à la racine du projet
+
+require_once $rootDirectory . '/models/ReportModel.php'; 
+require_once $rootDirectory . '/config/database.php'; 
 
 $database = new Database();
 $db = $database->getConnection();
 
-
 $reportModel = new ReportModel($db);
-
 
 $animalId = isset($_GET['animal']) ? $_GET['animal'] : null;
 $date = isset($_GET['date']) ? $_GET['date'] : null;
-
 
 $reports = $reportModel->getReports($animalId, $date);
 ?>

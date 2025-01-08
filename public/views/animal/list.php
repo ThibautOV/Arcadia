@@ -1,16 +1,13 @@
 <?php
+require_once dirname(__DIR__, 3) . '/config/database.php';
+require_once dirname(__DIR__, 3) . '/models/HabitatModel.php';
+require_once dirname(__DIR__, 3) . '/models/AnimalModel.php';
 
-require_once __DIR__ . '/../../models/HabitatModel.php';
-require_once __DIR__ . '/../../models/AnimalModel.php';
-
-
-require_once __DIR__ . '/../../config/database.php';
-$db = getDatabaseConnection();
-
+$database = new Database();
+$db = $database->getConnection();
 
 $habitatModel = new HabitatModel($db);
 $habitats = $habitatModel->getAllHabitats();
-
 
 $animals = [];
 $selectedHabitat = isset($_POST['habitat']) ? $_POST['habitat'] : '';
@@ -37,9 +34,11 @@ if ($selectedHabitat) {
     <form method="POST" action="">
         <select name="habitat" id="habitat-select" onchange="this.form.submit()">
             <option value="">Sélectionnez un habitat</option>
-            <option value="Savane" <?= $selectedHabitat == 'Savane' ? 'selected' : '' ?>>Savane</option>
-            <option value="Jungle" <?= $selectedHabitat == 'Jungle' ? 'selected' : '' ?>>Jungle</option>
-            <option value="Marais" <?= $selectedHabitat == 'Marais' ? 'selected' : '' ?>>Marais</option>
+            <?php foreach ($habitats as $habitat) : ?>
+                <option value="<?= htmlspecialchars($habitat['id']) ?>" <?= $selectedHabitat == $habitat['id'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($habitat['name']) ?>
+                </option>
+            <?php endforeach; ?>
         </select>
     </form>
 
@@ -53,11 +52,10 @@ if ($selectedHabitat) {
                     <img src="<?= htmlspecialchars($animal['image_url']) ?>" alt="<?= htmlspecialchars($animal['name']) ?>" class="animal-image">
                     <div class="card-body">
                         <h3 class="animal-name"><?= htmlspecialchars($animal['name']) ?></h3>
-                        <p><strong>Race:</strong> <?= htmlspecialchars($animal['breed']) ?></p>
+                        <p><strong>Race:</strong> <?= htmlspecialchars($animal['species']) ?></p>
                         <p><strong>État de santé:</strong> <?= htmlspecialchars($animal['health_status']) ?></p>
                         <p><strong>Nourriture:</strong> <?= htmlspecialchars($animal['food']) ?></p>
-                        <p><strong>Habitat:</strong> <?= htmlspecialchars($animal['habitat']) ?></p>
-
+                        <p><strong>Habitat:</strong> <?= htmlspecialchars($habitat['name']) ?></p>
                         <p><strong>Description:</strong> <?= htmlspecialchars($animal['description']) ?></p>
                     </div>
                 </div>
