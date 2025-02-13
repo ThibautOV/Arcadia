@@ -1,67 +1,52 @@
 <?php
+// Démarrer la session pour utiliser $_SESSION
 session_start();
 
-// Inclure la configuration de la base de données et le modèle d'authentification
-require_once '../../config/database.php'; // Ajustez le chemin si nécessaire
-require_once '../../models/UserModel.php'; // Inclure le modèle des utilisateurs
+// Inclure le fichier de configuration et la classe de la base de données
+require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/models/UserModel.php';
+
+// Récupérer les informations de connexion envoyées via le formulaire
+$email = $_POST['email'] ?? '';
+$password = $_POST['password'] ?? '';
+
+// Vérifier si les informations sont présentes
+if (empty($email) || empty($password)) {
+    $_SESSION['error'] = "Veuillez remplir tous les champs.";
+    header("Location: login.php");
+    exit();
+}
 
 // Connexion à la base de données
-$database = new Database();
-$db = $database->getConnection();
-
-// Créer une instance du modèle utilisateur
+$db = Database::getConnection();
 $userModel = new UserModel($db);
 
-$message = '';
+// Vérifier si l'email existe et récupérer les informations de l'utilisateur
+$user = $userModel->getUserByEmail($email);
 
-// Vérifier si le formulaire de connexion a été soumis
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
+if ($user && password_verify($password, $user['password'])) {
+    // L'authentification a réussi, stocker les informations dans la session
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['user_name'] = $user['first_name'] . ' ' . $user['last_name'];
+    $_SESSION['user_email'] = $user['email'];
+    $_SESSION['user_role'] = $user['role'];
 
-    // Authentifier l'utilisateur
-    if ($userModel->authenticate($email, $password)) {
-        // Récupérer le rôle de l'utilisateur
-        $role = $userModel->getUserRole($email);
-
-        // Enregistrer les informations dans la session
-        $_SESSION['user_role'] = $role;
-        $_SESSION['user_email'] = $email;
-
-        // Redirection en fonction du rôle
-        if ($role == 'admin') {
-            // Si l'utilisateur est un administrateur, rediriger vers le tableau de bord
-            header("Location: ../admin/dashboard.php");
-        } elseif ($role == 'employe') {
-            // Si l'utilisateur est un employé, rediriger vers la gestion des avis
-            header("Location: index.php?action=manageReviews"); // Redirection vers index.php avec l'action manageReviews
-        } elseif ($role == 'veterinaire') {
-            // Si l'utilisateur est un vétérinaire, rediriger vers la page d'accueil du vétérinaire
-            header("Location: ../veterinaire/home.php");
-        } else {
-            // Si le rôle est inconnu, rediriger vers la page de connexion avec un message d'erreur
-            $message = "Rôle inconnu. Veuillez contacter un administrateur.";
-        }
+    // Redirection en fonction du rôle de l'utilisateur
+    if ($user['role'] === 'employee') {
+        header("Location: ../../views/employee/dashboard_employee.php");
+        exit();
+    } elseif ($user['role'] === 'veterinarian') {
+        header("Location: ../../views/veterinarian/manage_animals.php");
         exit();
     } else {
-        $message = "Identifiants invalides. Veuillez réessayer.";
+        $_SESSION['error'] = "Rôle utilisateur inconnu.";
+        header("Location: login.php");
+        exit();
     }
+} else {
+    // L'authentification a échoué
+    $_SESSION['error'] = "Identifiants incorrects.";
+    header("Location: login.php");
+    exit();
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Connexion</title>
-</head>
-<body>
-    <h2>Connexion</h2>
-    <?php if (!empty($message)) echo "<p>$message</p>"; ?>
-    <form action="process_login.php" method="post">
-        <label>Email: <input type="email" name="email" required></label><br>
-        <label>Mot de passe: <input type="password" name="password" required></label><br>
-        <input type="submit" value="Se connecter">
-    </form>
-</body>
-</html>

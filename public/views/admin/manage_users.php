@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $role = $_POST['role'];
             $password = $_POST['password'];
 
+            echo "Rôle reçu : " . $role; // Ligne de débogage
             $message = $controller->createUser($firstName, $lastName, $email, $role, $password);
         } elseif ($_POST['action'] === 'delete') {
             $userId = $_POST['user_id'];
@@ -67,9 +68,8 @@ $consultations = $controller->getFilteredConsultations($animalFilter, $dateFilte
         <?php if (!empty($users)): ?>
             <?php foreach ($users as $user): ?>
                 <li>
-
                     <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?>
-                    (<?= htmlspecialchars($user['role'] === 'employe' ? 'Employé' : 'Vétérinaire') ?>)
+                    (<?= htmlspecialchars($user['role'] === 'employee' ? 'Employé' : 'Vétérinaire') ?>)
 
                     <!-- Formulaire de suppression avec confirmation -->
                     <form action="manage_users.php" method="post" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
@@ -92,8 +92,8 @@ $consultations = $controller->getFilteredConsultations($animalFilter, $dateFilte
         <label>Email: <input type="email" name="email" required></label><br>
         <label>Rôle:
             <select name="role">
-                <option value="employe">Employé</option>
-                <option value="veterinaire">Vétérinaire</option>
+                <option value="employee">Employé</option>
+                <option value="veterinarian">Vétérinaire</option>
             </select>
         </label><br>
         <label>Mot de passe: <input type="password" name="password" required></label><br>

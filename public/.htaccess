@@ -1,4 +1,10 @@
+Options -Indexes
 RewriteEngine On
+
+# Exception pour permettre l'accès direct aux fichiers PHP dans certains dossiers
+RewriteCond %{REQUEST_FILENAME} !^/public/views/employee/
+
+# Rediriger uniquement si le fichier ou le dossier n'existe pas
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php [QSA,L]
+RewriteRule ^ index.php [L]

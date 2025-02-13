@@ -1,16 +1,15 @@
 <?php
-require_once '../Models/AnimalModel.php';
+require_once '../../config/database.php';
+require_once '../../models/AnimalModel.php';
 
-// Connexion à la base de données
-$db = new PDO('mysql:host=localhost;dbname=zoo_db', 'username', 'password');
+$database = new Database();
+$db = $database->getConnection();
 
-// Création d'une instance du modèle d'animal
 $animalModel = new AnimalModel($db);
 $animals = $animalModel->getAllAnimals();
 
 $message = "";
 
-// Gérer les actions pour ajouter ou supprimer un animal
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action'])) {
         if ($_POST['action'] === 'delete') {
@@ -23,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -41,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?= htmlspecialchars($animal['name']) ?> (<?= htmlspecialchars($animal['species']) ?>)
                 <form action="manage_animals.php" method="post" style="display:inline;">
                     <input type="hidden" name="action" value="delete">
-                    <input type="hidden" name="animal_id" value="<?= $animal['id'] ?>">
+                    <input type="hidden" name="animal_id" value="<?= htmlspecialchars($animal['id'], ENT_QUOTES, 'UTF-8') ?>">
                     <input type="submit" value="Supprimer">
                 </form>
             </li>

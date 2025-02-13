@@ -9,10 +9,17 @@ class AnimalModel {
     // Récupérer tous les animaux
     public function getAllAnimals() {
         try {
-            $query = "SELECT * FROM animals";
+            $query = "
+                SELECT 
+                    a.id, a.name, a.species, a.health_status, a.food, a.image_url, 
+                    a.description, a.habitat_id, h.name AS habitat
+                FROM animals a
+                LEFT JOIN habitats h ON a.habitat_id = h.id
+            ";
             $statement = $this->db->prepare($query);
             $statement->execute();
-            return $statement->fetchAll(PDO::FETCH_ASSOC);
+            $animals = $statement->fetchAll(PDO::FETCH_ASSOC);
+            return $animals;
         } catch (PDOException $e) {
             error_log("Erreur lors de la récupération des animaux : " . $e->getMessage());
             return [];
@@ -22,7 +29,14 @@ class AnimalModel {
     // Récupérer les animaux par habitat
     public function getAnimalsByHabitat($habitatId) {
         try {
-            $query = "SELECT * FROM animals WHERE habitat_id = :habitat_id";
+            $query = "
+                SELECT 
+                    a.id, a.name, a.species, a.health_status, a.food, a.image_url, 
+                    a.description, a.habitat_id, h.name AS habitat
+                FROM animals a
+                LEFT JOIN habitats h ON a.habitat_id = h.id
+                WHERE a.habitat_id = :habitat_id
+            ";
             $statement = $this->db->prepare($query);
             $statement->bindValue(':habitat_id', $habitatId, PDO::PARAM_INT);
             $statement->execute();
@@ -36,7 +50,14 @@ class AnimalModel {
     // Récupérer un animal par son identifiant
     public function getAnimalById($id) {
         try {
-            $query = "SELECT * FROM animals WHERE id = :id";
+            $query = "
+                SELECT 
+                    a.id, a.name, a.species, a.health_status, a.food, a.image_url, 
+                    a.description, a.habitat_id, h.name AS habitat
+                FROM animals a
+                LEFT JOIN habitats h ON a.habitat_id = h.id
+                WHERE a.id = :id
+            ";
             $statement = $this->db->prepare($query);
             $statement->bindValue(':id', $id, PDO::PARAM_INT);
             $statement->execute();
@@ -50,8 +71,10 @@ class AnimalModel {
     // Ajouter un animal
     public function addAnimal($name, $species, $health_status, $food, $image_url, $habitat_id, $description) {
         try {
-            $query = "INSERT INTO animals (name, species, health_status, food, image_url, habitat_id, description) 
-                      VALUES (:name, :species, :health_status, :food, :image_url, :habitat_id, :description)";
+            $query = "
+                INSERT INTO animals (name, species, health_status, food, image_url, habitat_id, description) 
+                VALUES (:name, :species, :health_status, :food, :image_url, :habitat_id, :description)
+            ";
             $statement = $this->db->prepare($query);
             $statement->bindValue(':name', $name);
             $statement->bindValue(':species', $species);
@@ -69,9 +92,12 @@ class AnimalModel {
     // Mettre à jour un animal
     public function updateAnimal($id, $name, $species, $health_status, $food, $image_url, $habitat_id, $description) {
         try {
-            $query = "UPDATE animals SET name = :name, species = :species, health_status = :health_status, 
-                      food = :food, image_url = :image_url, habitat_id = :habitat_id, description = :description 
-                      WHERE id = :id";
+            $query = "
+                UPDATE animals 
+                SET name = :name, species = :species, health_status = :health_status, 
+                    food = :food, image_url = :image_url, habitat_id = :habitat_id, description = :description 
+                WHERE id = :id
+            ";
             $statement = $this->db->prepare($query);
             $statement->bindValue(':name', $name);
             $statement->bindValue(':species', $species);

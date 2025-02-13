@@ -32,17 +32,29 @@ class ReviewModel {
         }
     }
 
-    // Mettre à jour le statut de l'avis (approuvé ou refusé)
-    public function updateReviewStatus($review_id, $status) {
+    // Approuver un avis
+    public function approveReview($id) {
         try {
-            $query = "UPDATE reviews SET status = :status WHERE id = :id";
+            $query = "UPDATE reviews SET status = 'approved' WHERE id = :id";
             $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':status', $status, PDO::PARAM_STR);
-            $stmt->bindParam(':id', $review_id, PDO::PARAM_INT);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
         } catch (PDOException $e) {
             // Gestion des erreurs de mise à jour
-            die("Error updating review status: " . $e->getMessage());
+            die("Error approving review: " . $e->getMessage());
+        }
+    }
+
+    // Supprimer un avis
+    public function deleteReview($id) {
+        try {
+            $query = "DELETE FROM reviews WHERE id = :id";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            // Gestion des erreurs de suppression
+            die("Error deleting review: " . $e->getMessage());
         }
     }
 
